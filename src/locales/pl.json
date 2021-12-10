@@ -1,0 +1,21 @@
+{
+    "users": {
+        "register": {
+            "password:invalid": "Hasło jest błędne."
+        },
+        "login": {
+            "unable": "Nie udało się zalogować."
+        },
+        "authorization": {
+            "unauthorized": "Nie udało się uwierzytelnić.",
+            "notoken": "Nie udało się uwierzytelnić."
+        },
+        "invalid": {
+            "email": "Podano błędny adres email."
+        }
+    },
+    "errors": {
+        "unable:to:find": "Nie odnaleziono.",
+        "unexpected": "Wystąpił nieoczekiwany błąd."
+    }
+}

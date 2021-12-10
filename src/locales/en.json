@@ -1,0 +1,21 @@
+{
+    "users": {
+        "register": {
+            "password:invalid": "Password is invalid."
+        },
+        "login": {
+            "unable": "Unable to login."
+        },
+        "authorization": {
+            "unauthorized": "Unable to authenticate",
+            "notoken": "Unable to authenticate."
+        },
+        "invalid": {
+            "email": "Invalid email provided."
+        }
+    },
+    "errors": {
+        "unable:to:find": "Unable to find.",
+        "unexpected": "Unexpected error occured."
+    }
+}
