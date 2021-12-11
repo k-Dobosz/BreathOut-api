@@ -65,21 +65,18 @@ router.get('/:placeId', async (req: Request, res: Response, next: NextFunction) 
 })
 
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
-    const nextId = req.body.next
+    const nextId = req.body.next || req.params.next
     const limit = req.body.limit || req.params.limit
 
     try {
-        const places = await Place.find({
-            $or: [{
-                rank: { $gt: 0 }
-            },
-            {
-                _id: { $lt: nextId }
-            }]
-        })
+        let q = JSON.stringify(req.query)
+        q = q.replace(/\b(gt|gte|lt|lte|eq|ne)\b/g, str => `$${str}`)
+
+        const places = await Place.find(JSON.parse(q))
         .sort({
             _id: -1
         })
+        .select('-__v')
         .limit(limit || 10)
         .exec()
 
