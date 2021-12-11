@@ -2,17 +2,41 @@ import mongoose, { Document } from 'mongoose'
 
 interface IPlace extends Document {
     name: string,
+    description: string,
+    city: string,
     lat: string,
     lon: string,
+    addedBy: string,
+    favorites: number,
     rank: number
     rankList: Array<object>,
     opinions: Array<object>,
-    images: Array<Buffer>
+    images: Array<string>
 }
 
 const placeSchema = new mongoose.Schema({
     name: {
         type: String,
+        trim: true,
+        required: true
+    },
+    description: {
+        type: String,
+        trim: true,
+        required: true
+    },
+    tags: {
+        type: [String],
+        required: false
+    },
+    instructions: {
+        type: String,
+        trim: true,
+        required: false
+    },
+    city: {
+        type: String,
+        trim: true,
         required: true
     },
     lat: {
@@ -58,7 +82,7 @@ const placeSchema = new mongoose.Schema({
         }
     }],
     images: {
-        type: [Buffer],
+        type: [String],
         required: true
     }
 }, { timestamps: true })
