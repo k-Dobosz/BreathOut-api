@@ -14,6 +14,13 @@
             "email": "Podano błędny adres email."
         }
     },
+    "places": {
+        "notfound": {
+            "one": "Nie odnaleziono tego miejsca.",
+            "many": "Nie znaleziono takiego miejsca.",
+            "images": "Nie wgrano zdjęcia."
+        }
+    },
     "errors": {
         "unable:to:find": "Nie odnaleziono.",
         "unexpected": "Wystąpił nieoczekiwany błąd."

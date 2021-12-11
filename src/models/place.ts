@@ -3,7 +3,11 @@ import mongoose, { Document } from 'mongoose'
 interface IPlace extends Document {
     name: string,
     lat: string,
-    lon: string
+    lon: string,
+    rank: number
+    rankList: Array<object>,
+    opinions: Array<object>,
+    images: Array<Buffer>
 }
 
 const placeSchema = new mongoose.Schema({
@@ -19,7 +23,16 @@ const placeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    ranking: [{
+    addedBy: {
+        type: mongoose.Types.ObjectId,
+        required: true
+    },
+    rank: {
+        type: Number,
+        default: 0,
+        required: false,
+    },
+    rankList: [{
         userId: {
             type: mongoose.Types.ObjectId,
             index: true,
@@ -43,7 +56,11 @@ const placeSchema = new mongoose.Schema({
             trim: true,
             required: true
         }
-    }]
+    }],
+    images: {
+        type: [Buffer],
+        required: true
+    }
 }, { timestamps: true })
 
 const Place = mongoose.model<IPlace>('Place', placeSchema)
