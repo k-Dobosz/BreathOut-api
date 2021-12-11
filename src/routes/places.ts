@@ -37,6 +37,7 @@ router.post('/', auth, upload.array('image', 5), async (req: Request, res: Respo
                 const place = new Place({
                     name: req.body.name,
                     description: req.body.description,
+                    tags: req.body.tags,
                     instructions: req.body.instructions,
                     city: req.body.city,
                     lat: req.body.lat,
@@ -74,17 +75,27 @@ router.get('/:placeId', async (req: Request, res: Response, next: NextFunction) 
 })
 
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
-    const nextId = req.body.next || req.params.next
-    const limit = req.body.limit || req.params.limit
-    const city = req.body.city
-    const range = req.body.range || 30
-    let lat = req.body.lat
-    let lon = req.body.lon
-    try {
-        let q = JSON.stringify(req.query)
-        q = q.replace(/\b(gt|gte|lt|lte|eq|ne)\b/g, str => `$${str}`)
+    const nextId = req.params.next
+    const limit: any = req.query.limit
+    const city = req.query.city || ''
+    const range: any = req.query.range || 30
+    let lat: any = req.query.lat
+    let lon: any = req.query.lon
 
-        const places = await Place.find(JSON.parse(q))
+    try {
+        let q = {...req.query}
+        const notToUse = ['next', 'lat', 'lon', 'city', 'range']
+        const newQuery = Object.keys(q)
+            .filter((key) => !notToUse.includes(key))
+            .reduce( (obj: any, key: string) => { 
+                obj[key] = q[key] 
+                return obj
+            }, {} )
+
+        let qs = JSON.stringify(newQuery)
+        qs = qs.replace(/\b(gt|gte|lt|lte|eq|ne)\b/g, str => `$${str}`)
+
+        const places = await Place.find(JSON.parse(qs))
         .sort({
             _id: -1
         })
@@ -98,7 +109,7 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
         let inRange = []
 
         if (city !== undefined && (lat == undefined || lon == undefined) && !(lat != undefined && lon != undefined)) {
-            let res = await axios.get(`https://nominatim.openstreetmap.org/search?q=${city}&format=json`)
+            let res = await axios.get(`https://nominatim.openstreetmap.org/search?q=${encodeURI(String(city))}&format=json`)
 
             for(let i = 0; i < res.data.length; i++) {
                 if (res.data[i].class == 'boundary') {
@@ -110,9 +121,6 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
         }
 
         if (lat != undefined && lon != undefined) {
-            lat = parseFloat(lat)
-            lon = parseFloat(lon)
-
             for (let place of places) {
                 //https://www.movable-type.co.uk/scripts/latlong.html
                 const R = 6371e3 // metres
